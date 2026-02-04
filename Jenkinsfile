@@ -10,7 +10,7 @@ pipeline {
     }
 
     triggers {
-        cron('30 10 * * *')   // Daily 10:30 AM
+        cron('20 10 * * *')   // Daily 10:20 AM
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/avelmuruganofficials-sudo/RESTD-All-Sate.git'
+                    url: 'https://github.com/avelmuruganofficials-sudo/ACSTD-Test.git'
             }
         }
 
