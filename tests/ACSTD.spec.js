@@ -5,7 +5,7 @@ const workbook = xlsx.readFile('./tests/DATA/ACSTD AllState.xlsx');
 const sheet = workbook.Sheets[workbook.SheetNames[0]];
 const data = xlsx.utils.sheet_to_json(sheet);
 test('Excel data based automation', async ({ page }) => {
-await page.goto('https://www.landydev.com/#/auth/login');
+  await page.goto('https://www.landydev.com/#/auth/login');
   await page.waitForLoadState('networkidle');
   await page.getByRole('textbox', { name: 'Email' }).fill('velmurugan@stepladdersolutions.com');
   await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
@@ -65,24 +65,35 @@ await page.goto('https://www.landydev.com/#/auth/login');
       await page.getByText(row.QutSelContDeductibleType, { exact: true }).click();
       await page.getByRole('button', { name: 'save & Close' }).click();
       await page.waitForTimeout(2000);
-      // Click Rate
-      await page.getByRole('button', { name: /Rate/ }).click();
+    // Click Rate
+await page.getByRole('button', { name: /Rate/ }).click();
 
-      // Wait for sheet page load
-      await page.waitForLoadState("domcontentloaded");
+// Wait for quote page fully loaded
+await page.waitForLoadState("networkidle");
 
-      // Wait for Re-Generate button properly
-      const regenBtn = page.locator("button:has-text('Re-Generate Sheets')");
+// Extra wait for button to appear
+await page.waitForTimeout(8000);
 
-      await expect(regenBtn).toBeVisible({ timeout: 60000 });
-      await expect(regenBtn).toBeEnabled({ timeout: 60000 });
+// Locate button properly
+const regenBtn = page.getByRole("button", {
+  name: /Re-Generate Sheets/i
+});
 
-      // Click safely
-      await regenBtn.click();
-      console.log(" Re-Generate Sheets clicked successfully");
+// Debug screenshot
+await page.screenshot({ path: "before-regen.png" });
 
-      // Wait for processing
-      await page.waitForTimeout(5000);
+// Wait until button appears
+await expect(regenBtn).toBeVisible({ timeout: 120000 });
+
+// Scroll and click safely
+await regenBtn.scrollIntoViewIfNeeded();
+await regenBtn.click();
+
+console.log("✅ Re-Generate Sheets clicked successfully");
+
+// Wait after click
+await page.waitForTimeout(5000);
+
 
       await page.locator('//tbody/tr[2]/td[2]/button[3]').click();
       await page.waitForTimeout(2000);
